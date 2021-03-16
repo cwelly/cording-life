@@ -1,1 +1,21 @@
 graph algorithm for tree
+
+find, union으로 이루어진 알고리즘
+
+가장 부모인 노드를 찾는 find 함수
+
+def find (parents, x) :                   # 부모값테이블(parents)과 찾으려하는 자식값(x)을 입력
+ if parents[x]!=x :                       # 자식이 루트노드가 아니면(=부모노드가 따로 있다면)
+  parents[x]=find(parents, parents[x])    # 현재 자식의 부모테이블값을 모두 루트노드로 재귀적으로 바꾼다.(ex) pa[5]=find(4) => pa[5]=pa[4]=find(3) => pa[5]=pa[4]=pa[3]=1 이런식으로)
+ return paretns[x]                        # 바뀐 부모테이블값을 리턴
+                                          # 주의점= 위의 코드를 쓰면 호출할때마다 바뀐 루트노드값으로 바뀌긴 하지만, find를 호출하지 않으면 해당 자식의 parents값은 그대로다
+
+def union (parents, a, b)                 # 부모값테이블 과 합칠 자식 두개 주기
+ a=find(parents,a)                        # 각각의 루트노드값으로 바꾼다.
+ b=find(parents,b)
+ if a<b :                                 # 둘의 루트노드값을 비교
+  parents[b]=a                            # 서로 루트노드기 때문에 부모테이블값은 자기자신이다(ex pa[a]==a, pa[b]==b )
+ else :                                   # 더 큰값의 부모값을 작은 부모값으로 초기화한다.
+  parents[a]=b                                 
+  
+ 
