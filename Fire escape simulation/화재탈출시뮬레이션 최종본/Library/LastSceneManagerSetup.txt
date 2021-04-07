@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/UI script/UI/mainmenu/START.unity
+  isLoaded: 1
+  isActive: 1
