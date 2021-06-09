@@ -2,7 +2,7 @@ if you want to rotate a matrix with python, then use this code
 
 def rotate_matrix_90 (input_matrix) : 
   n=len(input_matrix)
-  m=len(input_matrix)
+  m=len(input_matrix[0])
   rotated_matrix=[[0] * n for _ in range(m) ]
   for i in range(n) :
     for j in range(m) :
