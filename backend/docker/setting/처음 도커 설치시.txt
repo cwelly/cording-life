@@ -1,0 +1,8 @@
+처음 도커인스톨러를 통해 설치받으면 wsl 2 installation is incomplete 에러가 뜬다.
+이것 때문에 docker가 실행되지 않는데,
+이 에러는 리눅스 관련 커널을 받지 않아서 뜨는 에러고 이를 해결하려면 커널을 받아야 한다.
+https://suzxc2468.tistory.com/211
+이블로그에서 올린 내용처럼
+windows powershell 에서 설정 후 리눅스커널을 받아야 한다.
+
+그러면 정상적으로 도커가 실행된다.
