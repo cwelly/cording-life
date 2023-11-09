@@ -1,80 +1,83 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
- 
-class Jewelry {
-    int mass; // 무게
-    int value; // 가격
- 
-    Jewelry(int mass, int value) {
-        this.mass = mass;
-        this.value = value;
-    }
-}
- 
+import java.util.*;
+
 public class Main {
- 
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
- 
-        Jewelry[] jewelries = new Jewelry[N];
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            int m = Integer.parseInt(st.nextToken());
-            int v = Integer.parseInt(st.nextToken());
- 
-            jewelries[i] = new Jewelry(m, v);
+    static  class Vosuc {
+        int v;
+        int m;
+        Vosuc(int v, int m){
+            this.v=v;
+            this.m=m;
         }
-        // 무게를 오름차순 정렬하되, 무게가 같을 경우 가격을 내림차순 정렬.
-        Arrays.sort(jewelries, new Comparator<Jewelry>() {
- 
-            @Override
-            public int compare(Jewelry o1, Jewelry o2) {
-                if (o1.mass == o2.mass) {
-                    return o2.value - o1.value;
-                }
-                return o1.mass - o2.mass;
-            }
- 
-        });
- 
-        int[] bags = new int[K];
-        for (int i = 0; i < K; i++) {
-            bags[i] = Integer.parseInt(br.readLine());
-        }
-        // 가방의 무게를 오름차순 정렬
-        Arrays.sort(bags);
- 
-        // 우선순위 큐는 항상 가격이 내림차순 정렬되도록 설정.
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
-        long ans = 0;
-        for (int i = 0, j = 0; i < K; i++) {
-            // 현재 가방의 무게보다 작거나 같은 보석을 모두 우선순위 큐에 넣음.
-            while (j < N && jewelries[j].mass <= bags[i]) {
-                pq.offer(jewelries[j++].value);
-            }
- 
-            // 우선순위 큐에 있는 요소를 하나 빼서 가방에 넣음.
-            // 이 때, 우선순위 큐는 내림차순 정렬이 되어있으므로
-            // 첫 번째 요소는 가장 큰 가격을 의미함.
-            if (!pq.isEmpty()) {
-                ans += pq.poll();
-            }
-        }
- 
-        bw.write(ans + "\n");
-        bw.flush();
-        bw.close();
-        br.close();
+
     }
- 
+    public static void main(String[] args) throws IOException {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(bf.readLine());
+        // 보석갯수
+        int n = Integer.parseInt(st.nextToken());
+        // 가방 갯수
+        int  k = Integer.parseInt(st.nextToken());
+        PriorityQueue<Vosuc> pq = new PriorityQueue<>((o1, o2) -> {
+            return o2.v-o1.v;
+        });
+        List<Vosuc> vosucs = new ArrayList<>();
+        int [][] arr = new int [n][2];
+        for (int i = 0; i < n; i++) {
+            st= new StringTokenizer(bf.readLine());
+            // 해당 보석의 무게
+            int m = Integer.parseInt(st.nextToken());
+
+            // 해당 보석의 가치
+            int v = Integer.parseInt(st.nextToken());
+            arr[i][0]=m;
+            arr[i][1]=v;
+            vosucs.add(new Vosuc(v,m));
+        }
+        //저장된 보석들을 무게순으로 오름차순 정렬.
+        Collections.sort(vosucs,(o1, o2) -> {
+            if(o1.m==o2.m){
+                return o2.v-o1.v;
+            }
+            return o1.m-o2.m;
+        });
+//        System.out.println(vosucs.get(0).m+" , "+vosucs.get(0).v);
+
+        // 가방의 최대 무게
+        List<Integer> bags = new ArrayList<>();
+        for (int i = 0; i < k; i++) {
+            int tmp = Integer.parseInt(bf.readLine());
+            bags.add(tmp);
+        }
+        Collections.sort(bags);
+        // 최대 무게 저장
+        Long answer =0L;
+        // 보석 확인 인덱스
+        int idx = 0;
+        //가방 순회
+        for (int i = 0; i < k; i++) {
+            // 무게를 넘어가는 보석이 나올때까지 확인
+            while(true){
+                // 이미 모든 보석을 확인했다면 end
+                if(idx>=n){
+                    break;
+                }
+                // 현재 가방 무게보다 보석이 크다면end
+                if(vosucs.get(idx).m > bags.get(i)){
+                    break;
+                }
+                pq.add(new Vosuc(vosucs.get(idx).v, vosucs.get(idx).m));
+                idx++;
+            }
+            // pq가 있는지 체크후 가장 큰것하나가져오기
+            if(!pq.isEmpty()){
+                answer+=Math.abs(pq.poll().v);
+            }
+        }
+
+        System.out.println(answer);
+
+    }
 }
